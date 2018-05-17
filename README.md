@@ -1,0 +1,2 @@
+# AAzureADscripts
+Azure AD Scripts 
