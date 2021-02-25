@@ -15,9 +15,8 @@
     $ClientID       = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"     # You need to register this using app registration section on the Azure AD portal. 
     $ClientSecret   = "_xxxxxxxx_xxxxxxxxxxxxx._xxxxxxx~"        # The client secret generated for the above application ID 
     $loginURL       = "https://login.microsoftonline.com/"
-    $tenantdomain   = "xxxxxxxx.onmicrosoft.com"                 # For example, contoso.onmicrosoft.com
-    $tenantId       = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"     # should be a 32 character Sting
-    $resource       = "https://graph.microsoft.com/"
+    $tName          = "xxxxxxxx.onmicrosoft.com"                 # Your tenant name , for example :- contoso.onmicrosoft.com
+    $res            = "https://graph.microsoft.com/"
     $Logfile        = "./azure.log"                              # Just for debugging purposes 
      
       
