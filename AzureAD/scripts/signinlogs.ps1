@@ -9,7 +9,8 @@
 #           - Directory.Read.All
 #           - AuditLog.Read.All
 # Limitations :- Not suitable for extremely large organisations with more than 100000 active users. 
-#                Script would need to be modified for that use case to consider paging the output received at every call as it would be very large. 
+#                Script would need to be modified for that use case to consider paging the output received at every call as it would be very large.
+#                You would need to use $top $skip $skiptoken etc. for the same. Please see https://docs.microsoft.com/en-us/graph/query-parameters for deatils. 
 ######################################################################################################################################################
     
     $ClientID       = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"     # You need to register this using app registration section on the Azure AD portal. 
