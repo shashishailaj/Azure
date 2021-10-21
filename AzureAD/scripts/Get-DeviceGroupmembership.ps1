@@ -4,7 +4,7 @@ Work In progress
 # Date     :- October 21 , 2021
 # License  :- MIT License
 # Audience :- For Azure Community 
-# Author   :- Shashi Shailaj
+# Author   :- Anurag Sharma , Shashi Shailaj
 # Pre-req  :- This script uses client credentials oAuth flow and requires you to register an app . 
 #            and grant the following application permissions on Microsoft Graph API and consent to them . 
 #          - Microsoft Graph
