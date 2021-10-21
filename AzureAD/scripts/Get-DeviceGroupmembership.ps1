@@ -1,6 +1,19 @@
 Work In progress 
 =============================
-
+#####################################################################################################################################################
+# Date     :- October 21 , 2021
+# License  :- MIT License
+# Audience :- For Azure Community 
+# Author   :- Shashi Shailaj
+# Pre-req  :- This script uses client credentials oAuth flow and requires you to register an app . 
+#            and grant the following application permissions on Microsoft Graph API and consent to them . 
+#          - Microsoft Graph
+#           - Directory.Read.All
+#           - AuditLog.Read.All
+# Limitations :- Not suitable for extremely large organisations with more than 100000 active users. 
+#                Script would need to be modified for that use case to consider paging the output received at every call as it would be very large.
+#                You would need to use $top $skip $skiptoken etc. for the same. Please see https://docs.microsoft.com/en-us/graph/query-parameters for deatils. 
+######################################################################################################################################################
 
 
 
