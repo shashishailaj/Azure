@@ -13,59 +13,59 @@ Work In progress
 # Limitations :- Not suitable for extremely large organisations with more than 100000 active users. 
 #                Script would need to be modified for that use case to consider paging the output received at every call as it would be very large.
 #                You would need to use $top $skip $skiptoken etc. for the same. Please see https://docs.microsoft.com/en-us/graph/query-parameters for deatils. 
+# Credits  :- Russ Maxwell <https://blog.russmax.com/powershell-using-datatables/>
 ######################################################################################################################################################
 
-
-
-Get-AzureADGroupMember -ObjectId ced2a638-f649-4c6e-b581-a57f5b231ace | where-Object {$_.ObjectType -eq "Device"} 
-Get-AzureADDevice -ObjectId 412fb047-4877-4ed3-8a28-c49242b9918d | Get-AzureADUserMembership | fl
-Get-AzureADGroup -ObjectId ced2a638-f649-4c6e-b581-a57f5b231ace | fl
-Get-AzureADDevice -SearchString user@domain.com | Get-AzureADUserMembership | % {Get-AzureADObjectByObjectId -ObjectId $_.ObjectId | select DisplayName,ObjectType,ObjectId,DeviceId} | ft
-
-Connect-AzureAD
-Param($DevObjId)
-$check=(Get-AzureADGroupmember -objectId $DevObjId).Displayname
-If($check -contains 'ATLASDC1'){Get-AzureADGroup -objectId $DevObjId}
-Import-Csv -path  C:\temp\devicegroup.csv | foreach {C:\Users\Administrator\Desktop\check.ps1 -ObjectId $_.objectId}
-
-
-
-
-Using Microsoft Grpah Module 
-
-Install-Module -Name Microsoft.Graph
 Connect-Graph -Scopes "User.Read.All", "Group.ReadWrite.All", "Device.Read.All"
-$DeviceGroupMembership = Invoke-GraphRequest -Uri "https://graph.microsoft.com/v1.0/devices/<deviceid>/memberOf"
-$DeviceGroupData.value.displayName
+$AllDevice = Invoke-GraphRequest -Uri "https://graph.microsoft.com/v1.0/devices/"
+$devicecount = $AllDevice.value.Count
+$graphurl = "https://graph.microsoft.com/v1.0/devices/"
 
 
-Credits - https://stackoverflow.com/questions/57251857/azure-active-directory-how-to-check-device-membership
+$tempTable = New-Object System.Data.DataTable
+   
+$col1 = New-Object System.Data.DataColumn("Device Object Id")
+$col2 = New-Object System.Data.DataColumn("Device Name")
+$col3 = New-Object System.Data.DataColumn("Group Names")
+           
 
-Get-AzureADGroup -All 1 | ? {"COMPUTER_DISPLAY_NAME" -in (Get-AzureADGroupMember -ObjectId $_.ObjectId).DisplayName} -Filter groupTypes/any(c:c+ne+'Unified')
+$tempTable.columns.Add($col1)
+$tempTable.columns.Add($col2)
+$tempTable.columns.Add($col3)
 
-function Get-AzureADDeviceMembership{
-    [CmdletBinding()]
-    Param(
-        [string]$ComputerDisplayname,
-        [switch]$UseCache
-    )
-    if(-not $Global:AzureAdGroupsWithMembers -or -not $UseCache){
-        write-host "refreshing cache"
-        $Global:AzureAdGroupsWithMembers = Get-AzureADGroup -All 1 | % {
-            $members = Get-AzureADGroupMember -ObjectId $_.ObjectId
-            $_ | Add-Member -MemberType NoteProperty -Name Members -Value $members
-            $_
-        }
-    }
-    $Global:AzureAdGroupsWithMembers | % {
-        if($ComputerDisplayname -in ($_.Members | select -ExpandProperty DisplayName)){
-            $_
-        }
-    } | select -Unique
+$tempTable.Columns.Count
+
+for ($i = 0;$i -le $devicecount - 1; $i += 1)
+{
+$row = $tempTable.NewRow()
+
+$url = -join($graphurl,$AllDevice.value[$i].id,"/memberOf")
+$DeviceGroupMember = Invoke-GraphRequest -Uri $url
+if($DeviceGroupMember.value.displayName)
+{
+$row["Device Object Id"] = $AllDevice.value[0].id
+$row["Device Name"] = $AllDevice.value[0].displayName
+$displayGrpcount = $DeviceGroupMember.value.displayName.Count
+
+if($displayGrpcount -eq 1)
+{
+$row["Group Names"] = $DeviceGroupMember.value.displayName
+
+}
+else
+{
+$GroupName = ""
+for ($j = 0;$j -le $displayGrpcount - 1; $j += 1)
+{
+$GroupName = -join($GroupName , $DeviceGroupMember.value.displayName[$j] ,"; ")
+}
+$row["Group Names"] = $GroupName
+
 }
 
-Connect-AzureAD    
-Get-AzureADDeviceMembership -ComputerDisplayname "COMPUTER_DISPLAY_NAME" -UseCache
+}
+$tempTable.rows.Add($row)
 
+$tempTable | export-csv -Path .\so.csv -NoTypeInformation
+}
 
--Filter groupTypes/any(c:c+ne+'Unified')
