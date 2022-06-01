@@ -24,17 +24,4 @@ for($x = 0; $x -le $Users.Count; $x++)
 }
 Write-Progress -Id 0 -Activity " " -Status " " -Completed
 $userInfo | Select DisplayName, AccountEnabled, JobTitle, Mobile, UserPrincipalName, UserType | Format-Table
-
-try {
-    $UserDetails | Select DisplayName, AccountEnabled, UserPrincipalName, UserType | Export-Csv -Path $path + "\AADusers.csv" -NoTypeInformation
-    Write-Host "User list exported" -ForegroundColor White
-} catch {
-    Write-Host "$error" -ForegroundColor red
-}
-
-
-
-
-
-
-
+$userInfo | Select DisplayName, AccountEnabled, UserPrincipalName, UserType | Export-Csv -Path $path + "\AADusers.csv" -NoTypeInformation
