@@ -7,21 +7,19 @@
 # Limitations :- NA
 ######################################################################################################################################################
 
-Connect-AzureAD -TenantId $tenantid 
-$tenantid = '9fc589e6-xxxx-xxxx-xxxx-0b88b6b17d5e' 
-$path = 'c:\temp'
-$TenantName = Get-AzureADTenantDetail
+
+$tid = 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx' 
+Connect-AzureAD -TenantId $tid
 $allUsers = Get-AzureADUser -All $true
-$Users.Count
+$allUsers.Count
 $userInfo = @()
 $uid = 0
-for($x = 0; $x -le $Users.Count; $x++) 
+for($x = 0; $x -le $allUsers.Count; $x++) 
 {
-    # Just writes status
-    Write-Progress -Id 0 -Activity "Retrieving User " -Status "$uid of $($Users.Count)" 
-    $Userinfo += ($allUsers)[$i] | Select-Object -Property *
+    Write-Progress -Id 0 -Activity "Retrieving User " -Status "$uid of $($allUsers.Count)" 
+    $userInfo += ($allUsers)[$x] | Select-Object -Property *
     $uid++
 }
 Write-Progress -Id 0 -Activity " " -Status " " -Completed
-$userInfo | Select DisplayName, AccountEnabled, JobTitle, Mobile, UserPrincipalName, UserType | Format-Table
-$userInfo | Select DisplayName, AccountEnabled, UserPrincipalName, UserType | Export-Csv -Path $path + "\AADusers.csv" -NoTypeInformation
+$userInfo | Select DisplayName, AccountEnabled, UserPrincipalName| Format-Table
+$userInfo | Select DisplayName, AccountEnabled, UserPrincipalName| Export-Csv -Path ./AADusers.csv -NoTypeInformation -Append
