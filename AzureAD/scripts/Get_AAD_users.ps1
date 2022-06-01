@@ -27,7 +27,7 @@ $userInfo | Select DisplayName, AccountEnabled, JobTitle, Mobile, UserPrincipalN
 
 try {
     $UserDetails | Select DisplayName, AccountEnabled, UserPrincipalName, UserType | Export-Csv -Path $path + "\AADusers.csv" -NoTypeInformation
-    Write-Host "Exported all user details" -ForegroundColor Green
+    Write-Host "User list exported" -ForegroundColor White
 } catch {
     Write-Host "$error" -ForegroundColor red
 }
